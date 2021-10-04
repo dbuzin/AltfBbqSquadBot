@@ -88,6 +88,9 @@ class BbqBot {
     private fun textContainsName(input: String?): String {
         return when {
             input?.contains("Буров", ignoreCase = true) == true -> "Буров воняет!"
+            input?.contains("Чечен", ignoreCase = true) == true -> "Извинись быстро!"
+            input?.contains("Соболь", ignoreCase = true) == true -> "Суп Фо Со в чуфальне!"
+            input?.contains("Аллах", ignoreCase = true) == true -> "Иншала брат!"
             input?.contains("Калич", ignoreCase = true) == true -> "Калич лох, иди работай!"
             input?.contains("Еж", ignoreCase = true) == true -> "Еж — настоящий украинский патриот"
             input?.contains("Бузин", ignoreCase = true) == true -> "Бузин самый классный юзер в этом чатике!"
