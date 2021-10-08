@@ -17,6 +17,7 @@ class NewsApi {
             .build()
         apiClient.getEverything(builder, object : NewsApiClient.ArticlesResponseCallback {
             override fun onSuccess(p0: ArticleResponse?) {
+                println("Articles size ${p0?.articles?.size}")
                 haveNews = true
                 p0?.articles?.forEach {
                     articles.add(it)

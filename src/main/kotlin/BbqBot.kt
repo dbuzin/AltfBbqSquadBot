@@ -12,7 +12,7 @@ import kotlin.collections.HashSet
 import kotlin.random.Random
 
 class BbqBot {
-    //private val membersFile = File("/home/dbuzin/members.txt")
+
     private val initTime = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     private val timeScaler = 3600 * 1000L
     private val newsApi = NewsApi()
@@ -59,7 +59,7 @@ class BbqBot {
                 }
 
             }
-            command("start") {
+            command("start_altf") {
                 bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "Здарова, уроды! Напишите /help , чтобы узнать что я могу")
             }
             command("help") {
@@ -80,18 +80,21 @@ class BbqBot {
                     bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "Сегодня оболонь уже получили! Счастливчик — $beerUser")
             }
             command("hohol_test") {
-                
+
             }
         }
     }
 
     private fun textContainsName(input: String?): String {
         return when {
-            input?.contains("Буров", ignoreCase = true) == true -> "Буров воняет!"
-            input?.contains("Калич", ignoreCase = true) == true -> "Калич лох, иди работай!"
-            input?.contains("Еж", ignoreCase = true) == true -> "Еж — настоящий украинский патриот"
-            input?.contains("Бузин", ignoreCase = true) == true -> "Бузин самый классный юзер в этом чатике!"
-            input?.contains("Мираж", ignoreCase = true) == true -> "Мираж, по тебе плачет вебкам!"
+            input?.contains("Буров ", ignoreCase = true) == true || input?.contains("Буров,", ignoreCase = true) == true -> "Буров воняет!"
+            input?.contains("Чечен ", ignoreCase = true) == true || input?.contains("Чечен,", ignoreCase = true) == true -> "Извинись быстро!"
+            input?.contains("Соболь ", ignoreCase = true) == true || input?.contains("Соболь,", ignoreCase = true) == true -> "Суп Фо Со в чуфальне!"
+            input?.contains("Аллах ", ignoreCase = true) == true || input?.contains("Аллах,", ignoreCase = true) == true -> "Иншала брат!"
+            input?.contains("Калич ", ignoreCase = true) == true || input?.contains("Калич,", ignoreCase = true) == true -> "Калич лох, иди работай!"
+            input?.contains("Еж ", ignoreCase = true) == true || input?.contains("Еж,", ignoreCase = true) == true -> "Еж — настоящий украинский патриот"
+            input?.contains("Бузин ", ignoreCase = true) == true || input?.contains("Бузин,", ignoreCase = true) == true -> "Бузин самый классный юзер в этом чатике!"
+            input?.contains("Мираж ", ignoreCase = true) == true || input?.contains("Мираж,", ignoreCase = true) == true -> "Мираж, по тебе плачет вебкам!"
             input?.contains("У Хохлов", ignoreCase = true) == true -> "hohlo_news"
             else -> "nothing"
         }
@@ -121,7 +124,7 @@ class BbqBot {
         val current = membersFile.readLines()
         chatMembers.forEach {
             if (!current.contains(it.toString()))
-                membersFile.writeText(it.toString())
+                membersFile.appendText("${it}\n")
         }
     }
 
