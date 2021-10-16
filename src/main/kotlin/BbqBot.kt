@@ -6,6 +6,9 @@ import com.github.kotlintelegrambot.dispatcher.message
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Update
 import com.github.kotlintelegrambot.extensions.filters.Filter
+import com.google.gson.Gson
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.*
 import kotlin.collections.HashSet
@@ -24,6 +27,12 @@ class BbqBot {
     private val obolonAnswer2 = "Сегодня Оболонь получит — @"
     private var beerUserChosen = false
     private var beerUser = ""
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("http://rzhunemogu.ru")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val anecdote = Anecdote(retrofit)
 
     init {
         newsApi.loadNews()
@@ -46,7 +55,7 @@ class BbqBot {
             message(Filter.Text){
                 saveUser(update)
                 val answer = textContainsName(message.text)
-                if(answer != "nothing" && answer!= "hohlo_news")
+                if(answer != "nothing" && answer != "hohlo_news" && answer != "get_anecdote")
                     bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = answer)
                 else if (answer == "hohlo_news") {
                     if (newsApi.haveNews()) {
@@ -57,7 +66,12 @@ class BbqBot {
                     else
                         bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "СБУ не дает мне искать новости!")
                 }
-
+                else if (answer == "get_anecdote") {
+                    val anecdoteString = anecdote.getRandomAnecdote()
+                    if (anecdoteString != null) {
+                        bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = anecdoteString)
+                    }
+                }
             }
             command("start_altf") {
                 bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "Здарова, уроды! Напишите /help , чтобы узнать что я могу")
@@ -96,6 +110,7 @@ class BbqBot {
             input?.contains("Бузин ", ignoreCase = true) == true || input?.contains("Бузин,", ignoreCase = true) == true -> "Бузин самый классный юзер в этом чатике!"
             input?.contains("Мираж ", ignoreCase = true) == true || input?.contains("Мираж,", ignoreCase = true) == true -> "Мираж, по тебе плачет вебкам!"
             input?.contains("У Хохлов", ignoreCase = true) == true -> "hohlo_news"
+            input?.contains("Бот", ignoreCase = true) == true && input.contains("Анекдот", ignoreCase = true) -> "get_anecdote"
             else -> "nothing"
         }
     }
